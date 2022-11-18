@@ -28,7 +28,7 @@ base64url() {
 
 macaroon() {
   MACAROON_FILE="/root/.lnd/data/chain/bitcoin/$NETWORK/admin.macaroon"
-  cat $MACAROON_FILE | tr -d '\0' | xxd -ps -u -c 1000
+  cat $MACAROON_FILE | xxd -ps -u -c 1000
 }
 
 ## Print out LND admin macaroon.
