@@ -33,10 +33,9 @@ macaroon() {
 
 ## Print out LND admin macaroon.
 lndconnect() {
-  [ -z "$REST_HOST" ] && REST_HOST=127.0.0.1
-  [ -z "$REST_PORT" ] && REST_PORT=443
+  [ -z "$REST_HOST" ] && REST_HOST=127.0.0.1:8080
   MACAROON_FILE="/root/.lnd/data/chain/bitcoin/$NETWORK/admin.macaroon"
   ENCODED_CERT="$(openssl x509 -outform der -in /root/.lnd/tls.cert | base64url)"
   MACAROON="$(cat $MACAROON_FILE | base64url)"
-  echo "lndconnect://$REST_HOST:$REST_PORT?macaroon=$MACAROON" | qrcode
+  echo "lndconnect://$REST_HOST?macaroon=$MACAROON" | qrcode
 }
