@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  lnd:
+    build: .
+    # entrypoint: console
+    container_name: neutrino-lnd
+    env_file: ./.env
+    hostname: neutrino-lnd
+    image: neutrino-lnd:latest
+    init: true
+    networks:
+      - net
+    ports:
+    # - 19735:19735
+      - 8080:8080
+      - 10009:10009
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - ./config:/config:ro
+      - ./data:/root/.lnd:rw
+      - ./home:/root/home:rw
+
+networks:
+  net:
+    name: 'bitcoin'

@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+## Banner Script
+
+SPACEUSE="$(du -ah --max-depth=1 / 2> /dev/null | sort -nr | head -n 5 )"
+NCLISTEN="$(lsof -i -P -n | grep LISTEN)"
+TMUXSESS="$(tmux ls 2> /dev/null)"
+
+display() {
+  [ -n "$1" ] && printf "$1\n" || printf "Nothing to display.\n"
+}
+
+templ banner "Network Connections" && display "$NCLISTEN" 2> /dev/null
+templ banner "File Storage" && display "$SPACEUSE" 
+templ banner "Tmux Sessions" && display "$TMUXSESS" 2> /dev/null
+templ banner "$(date)"
+
+printf "Running container $(templ hlight $(uname -n)) on $(uname -o) $(uname -m) platform.\n\n"
