@@ -65,6 +65,17 @@ docker compose run -it --entrypoint bash <container name>
 <~/home#> entrypoint
 ```
 
+## REST API
+
+The REST API can be queried using the following request Headers:
+```js
+endpoint: 'https://hostname:port/v1/' // getinfo
+header: {
+  'Grpc-Metadata-Macaroon': '<hex-encoded string of macaroon>',
+  'Content-Type': 'application/json'
+}
+```
+
 ## Resources
 
 **Docker Compose Reference**  
