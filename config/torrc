@@ -1,0 +1,43 @@
+## =================== /etc/tor/torrc ================= ##
+
+## Main settings.
+#User tor
+#RunAsDaemon 1
+
+## Single-Hop Mode
+HiddenServiceNonAnonymousMode 1
+HiddenServiceSingleHopMode 1
+
+## Log settings.
+Log notice file /var/log/tor/notice.log
+TruncateLogFile 1
+
+## Port to advertise for incoming Tor connections.
+#ORPort 9001
+#ORPort [IPv6-address]:9001
+
+## Mirror directory information for others
+#DirPort 9030
+
+## Run as a relay only (change policy to enable exit node)
+ExitPolicy reject *:*
+ExitPolicy reject6 *:*
+
+## Run Tor as a SOCKS proxy
+SocksPort 0
+#SocksPort 9050
+
+## Tor Control Configuration
+#ControlSocket 0
+ControlPort 9051
+CookieAuthentication 1
+CookieAuthFileGroupReadable 1
+CookieAuthFile /var/lib/tor/cookie
+
+## Hidden Service
+HiddenServiceDir /root/.lnd/hidden
+HiddenServiceVersion 3
+HiddenServicePort 2345  127.0.0.1:22
+HiddenServicePort 8080  127.0.0.1:8080
+HiddenServicePort 19735 127.0.0.1:19735
+HiddenServicePort 10009 127.0.0.1:10009

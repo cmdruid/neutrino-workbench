@@ -3,11 +3,10 @@ version: '3'
 services:
   lnd:
     build: .
-    # entrypoint: console
-    container_name: neutrino-lnd
-    env_file: ./.env
-    hostname: neutrino-lnd
     image: neutrino-lnd:latest
+    container_name: neutrino-lnd
+    hostname: neutrino-lnd
+    env_file: .env
     init: true
     networks:
       - net

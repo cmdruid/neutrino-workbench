@@ -1,6 +1,9 @@
 ## This file can be used to customize your environment.
 ## Feel free to add your own aliases and shortcuts!
 
+## Set default variables.
+[ -z "$NETWORK" ] && NETWORK="testnet"
+
 ## Run .init on login.
 [ -f '/root/home/.init' ] && . /root/home/.init
 
@@ -10,32 +13,34 @@ alias lncli="lncli --network=$NETWORK"
 ## Useful for checking open sockets.
 alias listen='lsof -i -P -n | grep LISTEN'
 
-## Shortcuts to logfiles.
 debug() { 
+  ## Shortcut to the logfile.
   tail -f "/root/.lnd/logs/bitcoin/$NETWORK/lnd.log"
 }
 
-## Get QR codes for exporting complex strings.
 qrcode() {
-  [ "$#" -ne 0 ] && input="$1" || input="$(tr -d '\0' < /dev/stdin)"
+  ## Generate a QR code from an input string.
+  [ "$#" -ne 0 ] && input="$@" || input="$(tr -d '\0' < /dev/stdin)"
   echo && qrencode -m 2 -t "UTF8" "$input" && printf "${input}\n\n"
 }
 
 base64url() {
-  [ "$#" -ne 0 ] && input="$1" || input="$(tr -d '\0' < /dev/stdin)"
+  ## Encode an input string into base64url.
+  [ "$#" -ne 0 ] && input="$@" || input="$(cat /dev/stdin)"
   printf "$input" | base64 -w 0 | tr "+" "-" | tr "/" "_"
 }
 
 macaroon() {
-  MACAROON_FILE="/root/.lnd/data/chain/bitcoin/$NETWORK/admin.macaroon"
-  cat $MACAROON_FILE | xxd -ps -u -c 1000
+  ## Print out the admin macaroon as a hex string.
+  MACA_FILE="/root/.lnd/data/chain/bitcoin/$NETWORK/admin.macaroon"
+  cat $MACA_FILE | xxd -ps -u -c 1000
 }
 
-## Print out LND admin macaroon.
 lndconnect() {
-  [ -z "$REST_HOST" ] && REST_HOST=127.0.0.1:8080
-  MACAROON_FILE="/root/.lnd/data/chain/bitcoin/$NETWORK/admin.macaroon"
-  ENCODED_CERT="$(openssl x509 -outform der -in /root/.lnd/tls.cert | base64url)"
-  MACAROON="$(cat $MACAROON_FILE | base64url)"
+  ## Print out LND connection details as a QR code.
+  #ENCODED_CERT="$(openssl x509 -outform der -in /root/.lnd/tls.cert | base64url)"
+  REST_HOST="$(cat $DATA/.resthost)"
+  MACA_FILE="/root/.lnd/data/chain/bitcoin/$NETWORK/admin.macaroon"
+  MACAROON="$(cat $MACA_FILE | base64 -w 0 | tr '+' '-' | tr '/' '_')"
   echo "lndconnect://$REST_HOST?macaroon=$MACAROON" | qrcode
 }
